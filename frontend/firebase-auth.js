@@ -1,11 +1,7 @@
-// frontend/firebase-auth.js (Final Updated Code for Step 6)
-// frontend/firebase-auth.js
+// frontend/firebase-auth.js (Corrected for Deployment)
 
-// --- ADD THIS LINE AT THE VERY TOP ---
-const API_BASE_URL = 'https://studyhivecopy-backend.onrender.com'; // Replace with your actual Render URL
-// ------------------------------------
+const API_BASE_URL = 'https://studyhivecopy-backend.onrender.com'; // Your Render URL
 
-// Paste your copied firebaseConfig object here
 const firebaseConfig = {
     apiKey: "AIzaSyAY4pk1GLp-D43iQz-CEdREbewgEC6Lo0g",
     authDomain: "studyhive-7cfcf.firebaseapp.com",
@@ -25,7 +21,6 @@ const googleProvider = new firebase.auth.GoogleAuthProvider();
 const signInWithGoogle = async () => {
     try {
         await auth.signInWithPopup(googleProvider);
-        // onAuthStateChanged will handle the rest
     } catch (error) {
         console.error("Error signing in with Google:", error);
     }
@@ -36,16 +31,12 @@ const signOut = async () => {
     try {
         await auth.signOut();
         console.log("User signed out successfully.");
-        // onAuthStateChanged will handle UI update
     } catch (error) {
         console.error("Error signing out:", error);
     }
 };
 
 // Function to send the token to our backend and fetch initial data
-// frontend/firebase-auth.js
-
-// --- REPLACE the old verifyUserWithBackend function with this ---
 const verifyUserWithBackend = async (user) => {
     if (!user) {
       renderApp(); // Render login page if no user
@@ -54,6 +45,7 @@ const verifyUserWithBackend = async (user) => {
 
     try {
         const token = await user.getIdToken();
+        // --- FIXED: Replaced single quotes with BACKTICKS (`) ---
         const response = await fetch(`${API_BASE_URL}/api/auth/google-signin`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -72,9 +64,7 @@ const verifyUserWithBackend = async (user) => {
             mongoId: backendUser._id
         };
 
-        // User verify hone ke baad, unke study groups fetch karo
         await fetchStudyGroups();
-        // Finally, render the app with all the user data and their groups
         renderApp();
 
     } catch (error) {
@@ -82,8 +72,6 @@ const verifyUserWithBackend = async (user) => {
         signOut(); // If verification fails, sign out completely
     }
 };
-
-// ... (rest of the firebase-auth.js file remains the same) ...
 
 // Listen for authentication state changes
 auth.onAuthStateChanged(user => {
@@ -95,21 +83,4 @@ auth.onAuthStateChanged(user => {
     appState.currentPage = "login";
     renderApp();
   }
-});
-
-
-// Listen for authentication state changes
-auth.onAuthStateChanged(user => {
-    if (user) {
-        // User is signed in via Firebase.
-        // Now, verify and get user data from OUR backend.
-        verifyUserWithBackend(user);
-    } else {
-        // User is signed out.
-        appState.isAuthenticated = false;
-        appState.user = null;
-        appState.currentPage = "login";
-        // Re-render the app to show the login page
-        renderApp();
-    }
 });

@@ -1,4 +1,4 @@
-// frontend/script.js (Final Code for Deployment)
+// frontend/script.js (Corrected for Deployment)
 
 const appState = {
   currentPage: "login",
@@ -39,7 +39,7 @@ function handleCreateGroupSubmit(e) {
     return;
   }
   user.getIdToken().then(token => {
-    fetch(`${API_BASE_URL}/api/groups`, { // <-- UPDATED URL
+    fetch(`${API_BASE_URL}/api/groups`, { // <-- UPDATED
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ name, subject, description }),
@@ -123,7 +123,7 @@ async function handleAiChatSubmit() {
     }
     try {
         const token = await user.getIdToken();
-        const response = await fetch(`${API_BASE_URL}/api/ai/chat`, { // <-- UPDATED URL
+        const response = await fetch(`${API_BASE_URL}/api/ai/chat`, { // <-- UPDATED
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             body: JSON.stringify({ prompt }),
@@ -158,7 +158,7 @@ async function fetchStudyGroups() {
   if (!user) return;
   try {
     const token = await user.getIdToken();
-    const response = await fetch(`${API_BASE_URL}/api/groups`, { // <-- UPDATED URL
+    const response = await fetch(`${API_BASE_URL}/api/groups`, { // <-- UPDATED
       headers: { 'Authorization': `Bearer ${token}` }
     });
     if (!response.ok) throw new Error('Could not fetch study groups.');
@@ -174,7 +174,7 @@ async function fetchDiscoverGroups() {
   if (!user) return;
   try {
     const token = await user.getIdToken();
-    const response = await fetch(`${API_BASE_URL}/api/groups/discover`, { // <-- UPDATED URL
+    const response = await fetch(`${API_BASE_URL}/api/groups/discover`, { // <-- UPDATED
       headers: { 'Authorization': `Bearer ${token}` }
     });
     if (!response.ok) throw new Error('Could not fetch discoverable groups.');
@@ -190,7 +190,7 @@ async function joinGroup(groupId) {
     if (!user) { alert("You must be logged in to join a group."); return; }
     try {
         const token = await user.getIdToken();
-        const response = await fetch(`${API_BASE_URL}/api/groups/${groupId}/join`, { // <-- UPDATED URL
+        const response = await fetch(`${API_BASE_URL}/api/groups/${groupId}/join`, { // <-- UPDATED
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -212,7 +212,7 @@ async function deleteGroup(groupId) {
     if (!user) { alert("You must be logged in to delete a group."); return; }
     try {
         const token = await user.getIdToken();
-        const response = await fetch(`${API_BASE_URL}/api/groups/${groupId}`, { // <-- UPDATED URL
+        const response = await fetch(`${API_BASE_URL}/api/groups/${groupId}`, { // <-- UPDATED
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -426,7 +426,7 @@ function createStudyGroupPage() {
     <div class="tabs"><div class="tabs-list">
       <button class="active" data-tab="resources">📁 Resources</button>
       <button data-tab="chat">💬 Chat</button>
-      <button data-tab="ai">🤖 Mitrr</button>
+      <button data-tab="ai">🤖 AI Assistant</button>
     </div></div>
     <div id="tabContent"></div>
   `;
@@ -455,7 +455,7 @@ function renderTabContent(tab, container) {
     case "ai":
       const groupId = appState.selectedGroup._id;
       if (!appState.chatHistories[groupId]) {
-        const welcomeMessageHTML = `<strong>AI Assistant:</strong> Hello I am Mitrr! Ask me anything about ${appState.selectedGroup.subject}!`;
+        const welcomeMessageHTML = `<strong>AI Assistant:</strong> Hello! Ask me anything about ${appState.selectedGroup.subject}!`;
         appState.chatHistories[groupId] = [
             { sender: 'ai', content: welcomeMessageHTML }
         ];
@@ -464,8 +464,8 @@ function renderTabContent(tab, container) {
         <div class="chat-container">
             <div class="chat-messages" id="aiMessages"></div>
             <div class="chat-input-container">
-                <textarea class="chat-input" placeholder="Ask Mitrr..." id="aiInput"></textarea>
-                <button class="btn btn-primary" id="aiSendBtn">Send</button>
+                <textarea class="chat-input" placeholder="Ask the AI assistant..." id="aiInput"></textarea>
+                <button class="btn btn-primary" id="aiSendBtn">Ask AI</button>
             </div>
         </div>
       `;
@@ -487,7 +487,6 @@ function renderTabContent(tab, container) {
   }
 }
 
-// Main render function
 function renderApp() {
   const app = document.getElementById("app");
   clearContainer(app);
