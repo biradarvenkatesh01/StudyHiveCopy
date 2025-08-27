@@ -426,7 +426,7 @@ function createStudyGroupPage() {
     <div class="tabs"><div class="tabs-list">
       <button class="active" data-tab="resources">📁 Resources</button>
       <button data-tab="chat">💬 Chat</button>
-      <button data-tab="ai">🤖 AI Assistant</button>
+      <button data-tab="ai">🤖 Mitrr</button>
     </div></div>
     <div id="tabContent"></div>
   `;
@@ -455,7 +455,7 @@ function renderTabContent(tab, container) {
     case "ai":
       const groupId = appState.selectedGroup._id;
       if (!appState.chatHistories[groupId]) {
-        const welcomeMessageHTML = `<strong>AI Assistant:</strong> Hello! Ask me anything about ${appState.selectedGroup.subject}!`;
+        const welcomeMessageHTML = `<strong>Mitrr:</strong> Hello I am Mitrr! Ask me anything about ${appState.selectedGroup.subject}!`;
         appState.chatHistories[groupId] = [
             { sender: 'ai', content: welcomeMessageHTML }
         ];
@@ -464,8 +464,8 @@ function renderTabContent(tab, container) {
         <div class="chat-container">
             <div class="chat-messages" id="aiMessages"></div>
             <div class="chat-input-container">
-                <textarea class="chat-input" placeholder="Ask the AI assistant..." id="aiInput"></textarea>
-                <button class="btn btn-primary" id="aiSendBtn">Ask AI</button>
+                <textarea class="chat-input" placeholder="Ask Mitrr..." id="aiInput"></textarea>
+                <button class="btn btn-primary" id="aiSendBtn">Send</button>
             </div>
         </div>
       `;
