@@ -1,0 +1,29 @@
+# ## Backend Dependencies ##
+# node_modules folder ko ignore karo
+backend/node_modules
+
+# ## Environment Variables ##
+# .env file ko ignore karo jisme secret keys hain
+backend/.env
+
+# ## Sensitive Firebase Key ##
+# Firebase Admin SDK ki secret key file ko ignore karo
+backend/config/serviceAccountKey.json
+
+# ## Temporary Test Files ##
+# Backend me banayi gayi test files ko ignore karo
+backend/test-hf-api.js
+
+# ## Operating System files ##
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ## Log files ##
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
