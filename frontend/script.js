@@ -1,4 +1,4 @@
-// frontend/script.js (Final Updated Code for Mobile-Friendly UI)
+// frontend/script.js (Final Code for Deployment)
 
 const appState = {
   currentPage: "login",
@@ -39,7 +39,7 @@ function handleCreateGroupSubmit(e) {
     return;
   }
   user.getIdToken().then(token => {
-    fetch('http://localhost:5001/api/groups', {
+    fetch(`${API_BASE_URL}/api/groups`, { // <-- UPDATED URL
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
       body: JSON.stringify({ name, subject, description }),
@@ -123,7 +123,7 @@ async function handleAiChatSubmit() {
     }
     try {
         const token = await user.getIdToken();
-        const response = await fetch('http://localhost:5001/api/ai/chat', {
+        const response = await fetch(`${API_BASE_URL}/api/ai/chat`, { // <-- UPDATED URL
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
             body: JSON.stringify({ prompt }),
@@ -158,7 +158,7 @@ async function fetchStudyGroups() {
   if (!user) return;
   try {
     const token = await user.getIdToken();
-    const response = await fetch('http://localhost:5001/api/groups', {
+    const response = await fetch(`${API_BASE_URL}/api/groups`, { // <-- UPDATED URL
       headers: { 'Authorization': `Bearer ${token}` }
     });
     if (!response.ok) throw new Error('Could not fetch study groups.');
@@ -174,7 +174,7 @@ async function fetchDiscoverGroups() {
   if (!user) return;
   try {
     const token = await user.getIdToken();
-    const response = await fetch('http://localhost:5001/api/groups/discover', {
+    const response = await fetch(`${API_BASE_URL}/api/groups/discover`, { // <-- UPDATED URL
       headers: { 'Authorization': `Bearer ${token}` }
     });
     if (!response.ok) throw new Error('Could not fetch discoverable groups.');
@@ -190,7 +190,7 @@ async function joinGroup(groupId) {
     if (!user) { alert("You must be logged in to join a group."); return; }
     try {
         const token = await user.getIdToken();
-        const response = await fetch(`http://localhost:5001/api/groups/${groupId}/join`, {
+        const response = await fetch(`${API_BASE_URL}/api/groups/${groupId}/join`, { // <-- UPDATED URL
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -212,7 +212,7 @@ async function deleteGroup(groupId) {
     if (!user) { alert("You must be logged in to delete a group."); return; }
     try {
         const token = await user.getIdToken();
-        const response = await fetch(`http://localhost:5001/api/groups/${groupId}`, {
+        const response = await fetch(`${API_BASE_URL}/api/groups/${groupId}`, { // <-- UPDATED URL
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -240,7 +240,7 @@ function selectGroup(group) {
   renderApp();
 }
 
-// --- NEW Sidebar control functions ---
+// Sidebar control functions
 function openSidebar() {
     document.getElementById('sidebar')?.classList.add('active');
     document.getElementById('overlay')?.classList.add('active');
@@ -250,7 +250,6 @@ function closeSidebar() {
     document.getElementById('sidebar')?.classList.remove('active');
     document.getElementById('overlay')?.classList.remove('active');
 }
-// ------------------------------------
 
 // Component creation functions
 function createLoginForm() {
@@ -271,24 +270,17 @@ function createLoginForm() {
   return container;
 }
 
-// --- REPLACED: createSidebar with new responsive version ---
 function createSidebar() {
   const sidebar = createElement("div", "sidebar");
   sidebar.id = 'sidebar';
-
   const userInitial = appState.user?.name ? appState.user.name.charAt(0).toUpperCase() : 'U';
-
   sidebar.innerHTML = `
-    <div class="sidebar-logo">
-        📚 Study Hive
-    </div>
-    
+    <div class="sidebar-logo">📚 Study Hive</div>
     <div class="sidebar-user-info">
         <div class="user-avatar">${userInitial}</div>
         <div class="user-name">${appState.user?.name || "User"}</div>
         <div class="user-email">${appState.user?.email || "user@example.com"}</div>
     </div>
-
     <nav class="sidebar-nav">
         <li><a href="#" data-page="dashboard">📊 Dashboard</a></li>
         <li><a href="#" data-page="groups">👥 Groups</a></li>
@@ -298,31 +290,25 @@ function createSidebar() {
         </li>
     </nav>
   `;
-  
   const activeLink = sidebar.querySelector(`[data-page="${appState.currentPage}"]`);
   if (activeLink) {
     activeLink.classList.add('active');
   }
-
   sidebar.querySelectorAll("[data-page]").forEach(link => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
       closeSidebar();
-      // Use the href attribute to get the page name, safer than dataset on parent
       const page = e.currentTarget.getAttribute('data-page');
       navigateTo(page);
     });
   });
-
   sidebar.querySelector("#logoutBtn").addEventListener("click", (e) => {
     e.preventDefault();
     closeSidebar();
     handleLogout();
   });
-
   return sidebar;
 }
-// -----------------------------------------------------------
 
 function createDashboard() {
   const container = createElement("div");
@@ -469,7 +455,7 @@ function renderTabContent(tab, container) {
     case "ai":
       const groupId = appState.selectedGroup._id;
       if (!appState.chatHistories[groupId]) {
-        const welcomeMessageHTML = `<strong>Mitrr:</strong> Hello I am Mitrr! Ask me anything about ${appState.selectedGroup.subject}!`;
+        const welcomeMessageHTML = `<strong>AI Assistant:</strong> Hello I am Mitrr! Ask me anything about ${appState.selectedGroup.subject}!`;
         appState.chatHistories[groupId] = [
             { sender: 'ai', content: welcomeMessageHTML }
         ];
@@ -501,34 +487,24 @@ function renderTabContent(tab, container) {
   }
 }
 
-// --- REPLACED: renderApp with new responsive version ---
+// Main render function
 function renderApp() {
   const app = document.getElementById("app");
   clearContainer(app);
-
   if (!appState.isAuthenticated) {
     app.appendChild(createLoginForm());
   } else {
-    // Authenticated state
     const appContainer = createElement("div", "app-container");
-    
-    // Mobile Header
     const mobileHeader = createElement("header", "mobile-header");
     mobileHeader.innerHTML = `
         <button class="hamburger-menu" id="hamburgerMenu">☰</button>
         <div class="header-logo">Study Hive</div>
     `;
     appContainer.appendChild(mobileHeader);
-
-    // Sidebar
     appContainer.appendChild(createSidebar());
-
-    // Overlay
     const overlay = createElement("div", "overlay");
     overlay.id = 'overlay';
     appContainer.appendChild(overlay);
-
-    // Main Content
     const mainContent = createElement("main", "main-content");
     switch (appState.currentPage) {
       case "dashboard": mainContent.appendChild(createDashboard()); break;
@@ -538,15 +514,11 @@ function renderApp() {
       default: mainContent.appendChild(createDashboard()); break;
     }
     appContainer.appendChild(mainContent);
-
     app.appendChild(appContainer);
-
-    // Add event listeners after elements are in the DOM
     document.getElementById('hamburgerMenu').addEventListener('click', openSidebar);
     document.getElementById('overlay').addEventListener('click', closeSidebar);
   }
 }
-// -----------------------------------------------------------
 
 // Initialize and Listeners
 document.addEventListener("DOMContentLoaded", () => {

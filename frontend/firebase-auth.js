@@ -1,4 +1,9 @@
 // frontend/firebase-auth.js (Final Updated Code for Step 6)
+// frontend/firebase-auth.js
+
+// --- ADD THIS LINE AT THE VERY TOP ---
+const API_BASE_URL = 'https://studyhivecopy-backend.onrender.com'; // Replace with your actual Render URL
+// ------------------------------------
 
 // Paste your copied firebaseConfig object here
 const firebaseConfig = {
@@ -49,7 +54,7 @@ const verifyUserWithBackend = async (user) => {
 
     try {
         const token = await user.getIdToken();
-        const response = await fetch('http://localhost:5001/api/auth/google-signin', {
+        const response = await fetch('${API_BASE_URL}/api/auth/google-signin', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token: token }),
