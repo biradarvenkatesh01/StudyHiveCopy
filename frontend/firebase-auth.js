@@ -54,7 +54,7 @@ const verifyUserWithBackend = async (user) => {
 
     try {
         const token = await user.getIdToken();
-        const response = await fetch('${API_BASE_URL}/api/auth/google-signin', {
+        const response = await fetch(`${API_BASE_URL}/api/auth/google-signin`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ token: token }),
